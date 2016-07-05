@@ -1,0 +1,10 @@
+README
+------
+SUPPORTS:
+-	Postgresql
+	+	requires
+		+-	psycopg2
+
+Connection configuration:
+- Linked XML file on initialisation
+- This provides the complete database connection configuration
