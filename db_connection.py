@@ -7,7 +7,7 @@ import psycopg2
 import xml.etree.ElementTree as xml
 
 class DBConnection:
-	def __init__(self, configuration="../xml/db_connection.xml"):
+	def __init__(self, configuration="xml/db_connection.xml"):
 		self.connection = None
 		#XML
 		self.tree = xml.parse(configuration)
