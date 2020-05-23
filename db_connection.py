@@ -29,7 +29,7 @@ class DBConnection:
 			self.connection.close()
 
 	def __read_xml(self):
-	   for db_connection in list(self.root):
+		for db_connection in list(self.root):
 			#print ("DB Connection: {0}".format(db_connection.tag))
 			if (db_connection.tag == "type"):
 				self.database_type = db_connection.text
