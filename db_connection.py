@@ -8,7 +8,8 @@ import xml.etree.ElementTree as xml
 
 class DBConnection:
 	def __init__(self, configuration="xml/db_connection.xml"):
-		self.connection = None
+		self.logger			= logging.getLogger('DBConnection')
+		self.connection		= None
 		#XML
 		self.tree = xml.parse(configuration)
 		self.root = self.tree.getroot()
@@ -24,7 +25,7 @@ class DBConnection:
 
 	def __del__(self):
 		if self.connection != None:
-			logging.info("Closing connection to to: %s@%s on %s:%s", self.username, self.database, self.host, self.port)
+			self.logger.info("Closing connection to to: %s@%s on %s:%s", self.username, self.database, self.host, self.port)
 			self.rollback()
 			self.connection.close()
 
@@ -50,7 +51,7 @@ class DBConnection:
 
 	def connect(self):
 		if self.connection is None:
-			logging.info("Connecting to DB")
+			self.logger.info("Connecting to DB")
 			#Read the XML data
 			self.__read_xml()
 			#Connect to the database - throws!
@@ -62,11 +63,12 @@ class DBConnection:
 					}
 			if self.password != None:
 				dsn['password'] = self.password
-			logging.info("Connecting to: %s@%s on %s:%s", self.username, self.database, self.host, self.port)
+			self.logger.info("Connecting to: %s@%s on %s:%s", self.username, self.database, self.host, self.port)
 			#Connect
 			self.connection = psycopg2.connect(**dsn)
+			self.logger.debug("encoding: %s", self.connection.encoding)
 		else:
-			logging.warning("Attempting reconnect to: %s@%s on %s:%s", self.username, self.database, self.host, self.port)
+			self.logger.warning("Attempting reconnect to: %s@%s on %s:%s", self.username, self.database, self.host, self.port)
 
 	def get_connection(self):
 		return self.connection
@@ -75,9 +77,10 @@ class DBConnection:
 		return self.connection.cursor()
 
 	def commit(self):
-		logging.info("COMMIT")
+		self.logger.info("COMMIT")
+		self.logger.debug("Notices: %s", self.connection.notices)
 		self.connection.commit()
 
 	def rollback(self):
-		logging.info("ROLLBACK")
+		self.logger.info("ROLLBACK")
 		self.connection.rollback()

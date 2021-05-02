@@ -1,8 +1,11 @@
 #!/usr/bin/python
+import logging
+
 from database import db_connection
 
 class DBCursor:
 	def __init__(self):
+		self.logger		=	logging.getLogger('DBCursor')
 		self.database		= db_connection.DBConnection()
 		self.db_cursor		= None
 
